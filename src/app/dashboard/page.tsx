@@ -1,6 +1,6 @@
 "use client"
 
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Pie, PieChart } from 'recharts';
 import incidents from '@/data/incidents.mock.json'
 
 function getSummary(incidents: typeof import('@/data/incidents.mock.json')) {
@@ -81,6 +81,40 @@ export default function Dashboard() {
         <p>Cerradas: {cerradas}</p>
         <p>Pausadas: {pausadas}</p>
         <p>Vencidas: {vencidas}</p>
+        <div>
+          <div>
+            <h3>Distribución por estado</h3>
+            <PieChart responsive style={{ height: 'calc(100% - 20px)', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
+              <Pie
+                data={[
+                  { name: 'Abiertas', value: abiertas, fill: '#82ca9d' },
+                  { name: 'Cerradas', value: cerradas, fill: '#8884d8' },
+                ]}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={80}
+                innerRadius={60}
+                isAnimationActive={false}
+              />
+            </PieChart>
+          </div>
+          <div>
+            <h3>Distribucion por prioridad</h3>
+            <PieChart responsive style={{ height: 'calc(100% - 20px)', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
+              <Pie
+                data={[
+                  { name: 'Baja', value: incidents.filter(i => !i.deleted && i.priority === 'low').length, fill: '#82ca9d' },
+                  { name: 'Media', value: incidents.filter(i => !i.deleted && i.priority === 'medium').length, fill: '#8884d8' },
+                  { name: 'Alta', value: incidents.filter(i => !i.deleted && i.priority === 'high').length, fill: '#ff7300' },
+                ]}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={80}
+                innerRadius={60}
+              />
+            </PieChart>
+          </div>
+        </div>
       </section>
       <section aria-label="Tendencia y Riesgo">
         <h3>Tendencia y Riesgo</h3>
