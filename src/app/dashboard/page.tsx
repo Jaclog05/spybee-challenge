@@ -1,3 +1,6 @@
+"use client"
+
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import incidents from '@/data/incidents.mock.json'
 
 function getSummary(incidents: typeof import('@/data/incidents.mock.json')) {
@@ -40,6 +43,24 @@ function getCargaTrabajo(incidents: typeof import('@/data/incidents.mock.json'))
   incidents.filter(i => !i.deleted && i.status === 'open').forEach(i => {
     i.assignees.forEach(a => {
       counts[a.name] = (counts[a.name] || 0) + 1
+    })
+  })
+  return Object.entries(counts).sort((a, b) => b[1] - a[1])
+}
+
+function getCategorias(incidents: typeof import('@/data/incidents.mock.json')) {
+  const counts: Record<string, number> = {}
+  incidents.filter(i => !i.deleted).forEach(i => {
+    counts[i.type.name] = (counts[i.type.name] || 0) + 1
+  })
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([type, amount]) => ({ type, amount }))
+}
+
+function getEtiquetas(incidents: typeof import('@/data/incidents.mock.json')) {
+  const counts: Record<string, number> = {}
+  incidents.filter(i => !i.deleted).forEach(i => {
+    i.tags.forEach(t => {
+      counts[t.name] = (counts[t.name] || 0) + 1
     })
   })
   return Object.entries(counts).sort((a, b) => b[1] - a[1])
@@ -91,7 +112,31 @@ export default function Dashboard() {
         </table>
       </section>
       <section aria-label="Mapa de Incidencias"></section>
-      <section aria-label="Distribución detallada"></section>
+      <section aria-label="Distribución detallada">
+        <h3>Distribución detallada</h3>
+        <div>
+          <h4>Por categoría de incidencia</h4>
+          <RadarChart
+            style={{ width: '100%', height: '100%', minWidth: '500px', maxHeight: '80vh', aspectRatio: 1, fontSize: '10px' }}
+            responsive
+            data={getCategorias(incidents)}
+            margin={{ top: 20, left: 20, right: 20, bottom: 20, }}
+          >
+            <PolarGrid />
+            <PolarAngleAxis dataKey="type" />
+            <PolarRadiusAxis />
+            <Radar dataKey="amount" fill="#8884d8" fillOpacity={0.6} />
+          </RadarChart>
+        </div>
+        <div>
+          <h4>Por etiqueta</h4>
+          <ul>
+            {getEtiquetas(incidents).map(([name, count]) => (
+              <li key={name}>{name} — {count}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
       <section aria-label="Desempeño del equipo">
         <h3>Desempeño del equipo</h3>
         <div>
