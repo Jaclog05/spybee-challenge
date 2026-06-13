@@ -29,7 +29,35 @@ export default function Dashboard() {
         <p>Pausadas: {pausadas}</p>
         <p>Vencidas: {vencidas}</p>
       </section>
-      <section aria-label="Tendencia y Riesgo"></section>
+      <section aria-label="Tendencia y Riesgo">
+        <h3>Tendencia y Riesgo</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Prioridad</th>
+              <th>Estado</th>
+              <th>Asignados</th>
+              <th>Creado por</th>
+              <th>Vencimiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            {incidents.filter(i => !i.deleted).slice(0, 10).map(incident => (
+              <tr key={incident.id}>
+                <td>{incident.sequenceId}</td>
+                <td>{incident.title}</td>
+                <td>{incident.priority}</td>
+                <td>{incident.status}</td>
+                <td>{incident.assignees.map(a => a.name).join(', ')}</td>
+                <td>{incident?.owner?.name}</td>
+                <td>{incident.dueDate ? new Date(incident.dueDate).toLocaleDateString() : '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
       <section aria-label="Mapa de Incidencias"></section>
       <section aria-label="Distribución detallada"></section>
       <section aria-label="Desempeño del equipo"></section>
