@@ -4,10 +4,11 @@ export default function Dashboard() {
       <header>
         <h1>Dashboard</h1>
       </header>
-      <section aria-label="Sección 1"></section>
-      <section aria-label="Sección 2"></section>
-      <section aria-label="Sección 3"></section>
-      <section aria-label="Sección 4"></section>
+      <section aria-label="Resumen General"></section>
+      <section aria-label="Tendencia y Riesgo"></section>
+      <section aria-label="Mapa de Incidencias"></section>
+      <section aria-label="Distribución detallada"></section>
+      <section aria-label="Desempeño del equipo"></section>
     </main>
   )
 }
