@@ -53,7 +53,7 @@ function getCategorias(incidents: typeof import('@/data/incidents.mock.json')) {
   incidents.filter(i => !i.deleted).forEach(i => {
     counts[i.type.name] = (counts[i.type.name] || 0) + 1
   })
-  return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([type, amount]) => ({ type, amount }))
+  return Object.entries(counts).map(([type, amount]) => ({ type, amount }))
 }
 
 function getEtiquetas(incidents: typeof import('@/data/incidents.mock.json')) {
@@ -83,8 +83,8 @@ export default function Dashboard() {
         <p>Vencidas: {vencidas}</p>
         <div>
           <div>
-            <h3>Distribución por estado</h3>
-            <PieChart responsive style={{ height: 'calc(100% - 20px)', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
+            <h4>Por estado</h4>
+            <PieChart responsive style={{ height: '200px', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
               <Pie
                 data={[
                   { name: 'Abiertas', value: abiertas, fill: '#82ca9d' },
@@ -99,8 +99,8 @@ export default function Dashboard() {
             </PieChart>
           </div>
           <div>
-            <h3>Distribucion por prioridad</h3>
-            <PieChart responsive style={{ height: 'calc(100% - 20px)', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
+            <h4>Por prioridad</h4>
+            <PieChart responsive style={{ height: '200px', width: '33%', flex: '1 1 100px', aspectRatio: 1 }}>
               <Pie
                 data={[
                   { name: 'Baja', value: incidents.filter(i => !i.deleted && i.priority === 'low').length, fill: '#82ca9d' },
