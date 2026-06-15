@@ -1,6 +1,6 @@
 "use client"
 
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Pie, PieChart } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Pie, PieChart, ComposedChart, CartesianGrid, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'recharts';
 import incidents from '@/data/incidents.mock.json'
 
 function getSummary(incidents: typeof import('@/data/incidents.mock.json')) {
@@ -14,6 +14,58 @@ function getSummary(incidents: typeof import('@/data/incidents.mock.json')) {
     i.status !== 'closed' && i.dueDate && new Date(i.dueDate) < now
   ).length
   return { totalActivas, abiertas, cerradas, pausadas, vencidas }
+}
+
+// funciones para grafico de incidencias creadas vs cerradas y backlog acumulado
+
+function getWeekLabel(date: Date) {
+  const d = new Date(date);
+  const day = d.getUTCDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setUTCDate(d.getUTCDate() + diff);
+  d.setUTCHours(0, 0, 0, 0);
+  return d.toISOString().split('T')[0];
+}
+
+function formatLabel(isoWeekStart: string) {
+  const date = new Date(isoWeekStart + 'T00:00:00Z');
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  })
+}
+
+function buildChartData(incidents: typeof import('@/data/incidents.mock.json')) {
+  const creadasMap = new Map<string, number>();
+  const cerradasMap = new Map<string, number>();
+
+  for (const incident of incidents) {
+    const createdWeek = getWeekLabel(new Date(incident.createdAt));
+    creadasMap.set(createdWeek, (creadasMap.get(createdWeek) ?? 0) + 1);
+
+    if (incident.closingDate) {
+      const closedWeek = getWeekLabel(new Date(incident.closingDate));
+      cerradasMap.set(closedWeek, (cerradasMap.get(closedWeek) ?? 0) + 1);
+    }
+  }
+
+  const allWeeks = Array.from(
+    new Set([...creadasMap.keys(), ...cerradasMap.keys()])
+  ).slice(0, 7).sort();
+
+  let backlog = 0;
+  return allWeeks.map((week) => {
+    const creadas = creadasMap.get(week) ?? 0;
+    const cerradas = cerradasMap.get(week) ?? 0;
+    backlog += creadas - cerradas;
+    return {
+      week: formatLabel(week),
+      creadas,
+      cerradas,
+      backlog,
+    };
+  })
 }
 
 function getResolvedores(incidents: typeof import('@/data/incidents.mock.json')) {
@@ -96,6 +148,7 @@ export default function Dashboard() {
                 innerRadius={60}
                 isAnimationActive={false}
               />
+              <Legend iconSize={10} iconType="circle" layout="vertical" verticalAlign="middle" wrapperStyle={{top: '50%', right: 0, transform: 'translate(0, -50%)', lineHeight: '24px'}}/>
             </PieChart>
           </div>
           <div>
@@ -112,12 +165,28 @@ export default function Dashboard() {
                 outerRadius={80}
                 innerRadius={60}
               />
+              <Legend iconSize={10} iconType="circle" layout="vertical" verticalAlign="middle" wrapperStyle={{top: '50%', right: 0, transform: 'translate(0, -50%)', lineHeight: '24px'}}/>
             </PieChart>
           </div>
         </div>
       </section>
       <section aria-label="Tendencia y Riesgo">
         <h3>Tendencia y Riesgo</h3>
+        <ComposedChart
+          style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
+          responsive
+          data={buildChartData(incidents)}
+          margin={{ top: 20, left: 0, right: 0, bottom: 0, }}
+        >
+          <CartesianGrid stroke="#f5f5f5" />
+          <XAxis dataKey="week" scale="band" />
+          <YAxis width="auto" niceTicks='snap125'/>
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="creadas" barSize={20} fill="#1b14e3" />
+          <Bar dataKey="cerradas" barSize={20} fill="#039a47" />
+          <Line type="monotone" dataKey="backlog" stroke="#ff7300" />
+        </ComposedChart>
         <table>
           <thead>
             <tr>
