@@ -78,6 +78,8 @@ export type CreateIncidentPayload = Pick<
   | 'priority'
   | 'locationDescription'
   | 'dueDate'
+  | 'tags'
+  | 'assignees'
 > & {
   type: IncidentType;
   coordinates: Coordinates;

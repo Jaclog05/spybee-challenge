@@ -14,26 +14,26 @@ export const useIncidentStore = create<IncidentStore>()((set) => ({
   selectedIncident: null,
 
   addIncident: (payload) => {
-    const newIncident: Incident = {
-      ...payload,
-      id: crypto.randomUUID(),
-      sequenceId: String(Date.now()),
-      order: 0,
-      status: 'open',
-      approval: false,
-      project: { id: '1', name: 'Projecto Exemplo' },
-      owner: { id: '1', name: 'João Silva', email: 'joao.silva@example.com', avatarUrl: 'https://i.pravatar.cc/150?img=1' },
-      assignees: [],
-      whatsappOwner: null,
-      observers: [],
-      media: [],
-      tags: [],
-      deleted: null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      closingDate: null,
-    }
-    set((state) => ({ incidents: [newIncident, ...state.incidents] }))
+    set((state) => {
+      const newIncident: Incident = {
+        ...payload,
+        id: crypto.randomUUID(),
+        sequenceId: String(state.incidents.length + 1).padStart(4, '0'),
+        order: 0,
+        status: 'open',
+        approval: false,
+        project: { id: '1', name: 'Projecto Exemplo' },
+        owner: { id: '1', name: 'João Silva', email: 'joao.silva@example.com', avatarUrl: 'https://i.pravatar.cc/150?img=1' },
+        whatsappOwner: null,
+        observers: [],
+        media: [],
+        deleted: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        closingDate: null,
+      }
+      return {incidents: [newIncident, ...state.incidents] }
+    })
   },
 
   selectIncident: (incident) => set({ selectedIncident: incident }),
