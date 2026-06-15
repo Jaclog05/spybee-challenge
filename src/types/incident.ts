@@ -70,3 +70,15 @@ export interface Incident {
   createdAt: string;
   updatedAt: string;
 }
+
+export type CreateIncidentPayload = Pick<
+  Incident,
+  | 'title'
+  | 'description'
+  | 'priority'
+  | 'locationDescription'
+  | 'dueDate'
+> & {
+  type: IncidentType;
+  coordinates: Coordinates;
+};

@@ -1,7 +1,6 @@
 "use client"
 
-import incidents from '@/data/incidents.mock.json'
-import type { Incident } from '@/types/incident'
+import { useIncidentStore } from '@/store/useIncidentStore'
 import {
   getSummary,
   buildChartData,
@@ -20,11 +19,10 @@ import CategoryRadarChart from '@/components/dashboard/CategoryRadarChart';
 import TagsList from '@/components/dashboard/TagsList';
 import TeamPerformance from '@/components/dashboard/TeamPerformance';
 
-const data = incidents as Incident[]
-
 export default function Dashboard() {
+  const data = useIncidentStore(state => state.incidents)
+  const active = data.filter(i => !i.deleted)
   const summary = getSummary(data);
-  const active = data.filter(i => !i.deleted);
 
   return (
     <main>
