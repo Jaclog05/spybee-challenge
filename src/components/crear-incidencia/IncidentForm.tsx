@@ -1,13 +1,22 @@
 "use client"
+import { useEffect } from 'react'
 import { useIncidentForm } from './useIncidentForm'
 import { CATEGORIAS, ETIQUETAS, ASIGNADOS } from './IncidentForm.constants'
 
-export default function IncidentForm() {
+type Props = {
+  onReady?: (setCoordinates: (lat: number, lng: number) => void) => void
+}
+
+export default function IncidentForm({ onReady }: Props) {
   const {
     form, setForm, submitted, handleChange, handleSubmit,
     handleTagsChange, handleAssigneesChange,
-    handleFiles, removeFile
+    handleFiles, removeFile, setCoordinates
   } = useIncidentForm()
+
+  useEffect(() => {
+    onReady?.(setCoordinates)
+  }, [onReady, setCoordinates])
 
   return (
     <>
