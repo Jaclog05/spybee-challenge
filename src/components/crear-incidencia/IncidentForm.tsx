@@ -1,22 +1,19 @@
 "use client"
-import { useEffect } from 'react'
+
 import { useIncidentForm } from './useIncidentForm'
 import { CATEGORIAS, ETIQUETAS, ASIGNADOS } from './IncidentForm.constants'
 
 type Props = {
-  onReady?: (setCoordinates: (lat: number, lng: number) => void) => void
+  initialCoordinates?: { lat: number, lng: number }
+  onSubmitSuccess?: () => void
 }
 
-export default function IncidentForm({ onReady }: Props) {
+export default function IncidentForm({ initialCoordinates, onSubmitSuccess }: Props) {
   const {
     form, setForm, submitted, handleChange, handleSubmit,
     handleTagsChange, handleAssigneesChange,
-    handleFiles, removeFile, setCoordinates
-  } = useIncidentForm()
-
-  useEffect(() => {
-    onReady?.(setCoordinates)
-  }, [onReady, setCoordinates])
+    handleFiles, removeFile
+  } = useIncidentForm(onSubmitSuccess, initialCoordinates)
 
   return (
     <>
@@ -88,7 +85,7 @@ export default function IncidentForm({ onReady }: Props) {
 
         <div>
           <label htmlFor="locationDescription">Detalles de localización</label>
-          <input id="locationDescription" type="text" value={form.locationDescription}
+          <input id="locationDescription" type="text" name="locationDescription" value={form.locationDescription}
             onChange={handleChange}
             placeholder="Ej: Nivel 11 - eje E3"
           />

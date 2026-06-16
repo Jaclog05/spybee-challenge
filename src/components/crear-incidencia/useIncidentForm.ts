@@ -2,9 +2,16 @@ import { useState } from 'react'
 import { useIncidentStore } from '@/store/useIncidentStore'
 import { INITIAL_FORM, ETIQUETAS, ASIGNADOS } from './IncidentForm.constants'
 
-export function useIncidentForm() {
+export function useIncidentForm(
+  onSubmitSuccess?: () => void,
+  initialCoordinates?: { lat: number; lng: number }
+) {
   const addIncident = useIncidentStore(state => state.addIncident)
-  const [form, setForm] = useState(INITIAL_FORM)
+  const [form, setForm] = useState({
+    ...INITIAL_FORM,
+    lat: initialCoordinates ? String(initialCoordinates.lat) : '',
+    lng: initialCoordinates ? String(initialCoordinates.lng) : ''
+  })
   const [submitted, setSubmitted] = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
@@ -28,6 +35,7 @@ export function useIncidentForm() {
 
     setForm(INITIAL_FORM)
     setSubmitted(true)
+    onSubmitSuccess?.()
     setTimeout(() => setSubmitted(false), 3000)
   }
 

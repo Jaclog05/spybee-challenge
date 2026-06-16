@@ -7,12 +7,17 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
 type Props = {
   onLocationSelect?: (lat: number, lng: number) => void
+  isSelecting?: boolean
 }
 
-export default function MapView({ onLocationSelect }: Props) {
+export default function MapView({ onLocationSelect, isSelecting }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
-  const markerRef = useRef<mapboxgl.Marker | null>(null)
+
+  useEffect(() => {
+    if (!mapRef.current) return
+    mapRef.current.getCanvas().style.cursor = isSelecting ? 'crosshair' : ''
+  }, [isSelecting])
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return
@@ -37,16 +42,6 @@ export default function MapView({ onLocationSelect }: Props) {
 
     const handleClick = (e: mapboxgl.MapMouseEvent) => {
       const { lat, lng } = e.lngLat
-
-      // Mover o crear marker en el punto clickeado
-      if (markerRef.current) {
-        markerRef.current.setLngLat([lng, lat])
-      } else {
-        markerRef.current = new mapboxgl.Marker({ color: '#E53935' })
-          .setLngLat([lng, lat])
-          .addTo(mapRef.current!)
-      }
-
       onLocationSelect(lat, lng)
     }
 
@@ -54,5 +49,5 @@ export default function MapView({ onLocationSelect }: Props) {
     return () => { mapRef.current?.off('click', handleClick) }
   }, [onLocationSelect])
 
-  return <div ref={containerRef} style={{ width: '100%', height: '400px' }} />
+  return <div ref={containerRef} style={{ width: '100%', height: '100vh' }} />
 }
