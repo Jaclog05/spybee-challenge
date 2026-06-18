@@ -29,8 +29,6 @@ export default function MapView({ onLocationSelect, isSelecting }: Props) {
       zoom: 14,
     })
 
-    mapRef.current.addControl(new mapboxgl.NavigationControl())
-
     return () => {
       mapRef.current?.remove()
       mapRef.current = null
@@ -49,5 +47,5 @@ export default function MapView({ onLocationSelect, isSelecting }: Props) {
     return () => { mapRef.current?.off('click', handleClick) }
   }, [onLocationSelect])
 
-  return <div ref={containerRef} style={{ width: '100%', height: '100vh' }} />
+  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }
