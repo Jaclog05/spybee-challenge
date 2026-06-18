@@ -2,6 +2,7 @@
 
 import { useIncidentForm } from './useIncidentForm'
 import { CATEGORIAS, ETIQUETAS, ASIGNADOS } from './IncidentForm.constants'
+import styles from './IncidentForm.module.scss'
 
 type Props = {
   initialCoordinates?: { lat: number, lng: number }
@@ -17,47 +18,49 @@ export default function IncidentForm({ initialCoordinates, onSubmitSuccess }: Pr
 
   return (
     <>
-      {submitted && <p role="alert">✓ Incidencia creada correctamente</p>}
+    {submitted && <p className={styles.successMsg}>✓ Incidencia creada correctamente</p>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Título *</label>
-          <input id="title" name="title" type="text" value={form.title}
-            onChange={handleChange} required
-          />
+    <form onSubmit={handleSubmit}>
+      <div className={styles.body}>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="title">
+            <span className={styles.required}>*</span> Título
+          </label>
+          <input className={styles.input} id="title" name="title"
+            type="text" value={form.title} onChange={handleChange} required />
         </div>
 
-        <div>
-          <label htmlFor="description">Descripción *</label>
-          <textarea id="description" name="description" value={form.description} rows={4}
-            onChange={handleChange} required
-          />
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="description">
+            <span className={styles.required}>*</span> Descripción
+          </label>
+          <textarea className={styles.textarea} id="description" name="description"
+            value={form.description} rows={4} onChange={handleChange} required />
         </div>
 
-        <div>
-          <label htmlFor="dueDate">Fecha de vencimiento</label>
-          <input id="dueDate" name="dueDate" type="date" value={form.dueDate}
-            onChange={handleChange}
-          />
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="dueDate">Fecha de vencimiento</label>
+          <input className={styles.input} id="dueDate" name="dueDate"
+            type="date" value={form.dueDate} onChange={handleChange} />
         </div>
 
-        <div>
-          <label htmlFor="type">Categoría *</label>
-          <select id="type" value={form.type.id}
-            onChange={e => {
-              const selected = CATEGORIAS.find(c => c.id === e.target.value)!
-              setForm(f => ({ ...f, type: selected }))
-            }}
-          >
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="type">
+            <span className={styles.required}>*</span> Categoría
+          </label>
+          <select className={styles.select} id="type" value={form.type.id}
+            onChange={e => setForm(f => ({ ...f, type: CATEGORIAS.find(c => c.id === e.target.value)! }))}>
             {CATEGORIAS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
 
-        <div>
-          <label htmlFor="priority">Prioridad *</label>
-          <select id="priority" name="priority" value={form.priority}
-            onChange={handleChange}
-          >
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="priority">
+            <span className={styles.required}>*</span> Prioridad
+          </label>
+          <select className={styles.select} id="priority" name="priority"
+            value={form.priority} onChange={handleChange}>
             <option value="low">Baja</option>
             <option value="medium">Media</option>
             <option value="high">Alta</option>
@@ -65,67 +68,66 @@ export default function IncidentForm({ initialCoordinates, onSubmitSuccess }: Pr
           </select>
         </div>
 
-        <div>
-          <label htmlFor="tags">Etiquetas </label>
-          <select id="tags" multiple value={form.tags.map(t => t.id)}
-            onChange={handleTagsChange}
-          >
-            {ETIQUETAS.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="assignees">Asignados </label>
-          <select id="assignees" multiple value={form.assignees.map(u => u.id)}
-            onChange={handleAssigneesChange}
-          >
-            {ASIGNADOS.map(user => <option key={user.id} value={user.id}>{user.name}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="locationDescription">Detalles de localización</label>
-          <input id="locationDescription" type="text" name="locationDescription" value={form.locationDescription}
-            onChange={handleChange}
-            placeholder="Ej: Nivel 11 - eje E3"
-          />
-        </div>
-
-        <div>
-          <div>
-            <label htmlFor="lat">Latitud</label>
-            <input id="lat" type="number" name="lat" step="any" value={form.lat}
-              onChange={e => setForm(f => ({ ...f, lat: e.target.value }))} readOnly
-            />
+        <div className={styles.fieldRow}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="tags">Etiquetas</label>
+            <select className={styles.select} id="tags" multiple
+              value={form.tags.map(t => t.id)} onChange={handleTagsChange}>
+              {ETIQUETAS.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+            </select>
           </div>
-          <div>
-            <label htmlFor="lng">Longitud</label>
-            <input id="lng" type="number" name="lng" step="any" value={form.lng}
-              onChange={e => setForm(f => ({ ...f, lng: e.target.value }))} readOnly
-            />
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="assignees">Asignados</label>
+            <select className={styles.select} id="assignees" multiple
+              value={form.assignees.map(u => u.id)} onChange={handleAssigneesChange}>
+              {ASIGNADOS.map(user => <option key={user.id} value={user.id}>{user.name}</option>)}
+            </select>
           </div>
         </div>
 
-        <div>
-          <label htmlFor="media">Archivos adjuntos</label>
-          <input id="media" type="file" multiple accept="image/*,video/*"
-            onChange={handleFiles}
-          />
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="locationDescription">Detalles de localización</label>
+          <input className={styles.input} id="locationDescription" name="locationDescription"
+            type="text" value={form.locationDescription} onChange={handleChange}
+            placeholder="Ej: Nivel 11 - eje E3" />
+        </div>
+
+        <div className={styles.fieldRow}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="lat">Latitud</label>
+            <input className={styles.input} id="lat" name="lat" type="number"
+              step="any" value={form.lat} readOnly />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="lng">Longitud</label>
+            <input className={styles.input} id="lng" name="lng" type="number"
+              step="any" value={form.lng} readOnly />
+          </div>
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="media">Archivos adjuntos</label>
+          <input className={styles.input} id="media" type="file"
+            multiple accept="image/*,video/*" onChange={handleFiles} />
           {form.media.length > 0 && (
-            <ul>
+            <ul className={styles.fileList}>
               {form.media.map((file, i) => (
-                <li key={i}>
+                <li key={i} className={styles.fileItem}>
                   {file.name}
-                  <button type="button" onClick={() => removeFile(i)}>✕</button>
+                  <button type="button" className={styles.removeFileBtn}
+                    onClick={() => removeFile(i)}>✕</button>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        <button type="submit">Crear Incidencia</button>
+      </div>
 
-      </form>
-    </>
+      <div className={styles.footer}>
+        <button type="submit" className={styles.submitBtn}>Crear Incidencia</button>
+      </div>
+    </form>
+  </>
   )
 }
