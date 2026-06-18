@@ -1,19 +1,21 @@
 'use client'
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
+import styles from './CategoryRadarChart.module.scss'
 
 type DataPoint = { type: string; amount: number }
 type Props = { data: DataPoint[] }
 
 export default function CategoryRadarChart({ data }: Props) {
   return (
-    <div>
-      <h4>Por categoría de incidencia</h4>
-      <RadarChart width={400} height={400} data={data}>
-        <PolarGrid />
-        <PolarAngleAxis dataKey="type" />
-        <PolarRadiusAxis />
-        <Radar dataKey="amount" fill="#8884d8" fillOpacity={0.6} />
-      </RadarChart>
+    <div className={styles.chartWrapper}>
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart data={data} outerRadius="80%">
+          <PolarGrid />
+          <PolarAngleAxis dataKey="type" tick={{ fontSize: 10, fontWeight: 'bold', fill: "#000000" }}/>
+          <PolarRadiusAxis tick={{fontSize: 10, fill: "#000000" }} />
+          <Radar dataKey="amount" fill="#FEC513" fillOpacity={0.6} />
+        </RadarChart>
+      </ResponsiveContainer>
     </div>
   )
 }
