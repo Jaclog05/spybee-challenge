@@ -1,0 +1,57 @@
+@use '../../styles/variables' as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+.card {
+  background: $color-surface;
+  border-radius: $radius-md;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardAbiertas  { border-left-color: #22c55e; }
+.cardCerradas  { border-left-color: #3b82f6; }
+.cardPausadas  { border-left-color: #f59e0b; }
+.cardVencidas  { border-left-color: #ef4444; }
+.cardTotal     { border-left-color: #8b5cf6; }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.cardIcon {
+  color: #9ca3af;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.valueAbiertas { color: #22c55e; }
+.valueCerradas { color: #3b82f6; }
+.valuePausadas { color: #f59e0b; }
+.valueVencidas { color: #ef4444; }
+.valueTotal    { color: #8b5cf6; }
+
+.cardSub {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
