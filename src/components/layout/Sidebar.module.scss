@@ -1,0 +1,35 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.sidebar {
+  grid-area: sidebar;
+  width: $sidebar-width;
+  background: $color-sidebar-bg;
+  border-right: 1px solid $color-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+  z-index: $z-sidebar;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  align-items: center;
+}
+
+.navItem {
+  @include icon-btn;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+  font-size: 1.25rem;
+}
+
+.active {
+  background: rgba(245, 158, 11, 0.15);
+  color: $color-accent;
+}
