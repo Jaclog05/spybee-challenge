@@ -1,0 +1,18 @@
+@use '../../styles/variables' as *;
+
+.shell {
+  display: grid;
+  grid-template-areas:
+    "navbar navbar"
+    "sidebar content";
+  grid-template-rows: $navbar-height 1fr;
+  grid-template-columns: $sidebar-width 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: $color-sidebar-bg;
+  gap: 6px;
+  padding: 6px;
+  padding-top: 0;
+  padding-left: 0;
+}
