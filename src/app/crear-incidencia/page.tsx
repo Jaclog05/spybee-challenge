@@ -1,7 +1,10 @@
 "use client"
 import dynamic from 'next/dynamic'
 import IncidentForm from '@/components/crear-incidencia/IncidentForm'
+import MapToolbar from '@/components/map/MapToolbar'
 import { useState } from 'react'
+import { X } from 'lucide-react'
+import styles from './CrearIncidencia.module.scss'
 
 const MapView = dynamic(() => import('@/components/map/MapView'), { ssr: false })
 
@@ -18,7 +21,7 @@ export default function CrearIncidencia() {
   }
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
 
       <MapView
         onLocationSelect={handleLocationSelect}
@@ -26,18 +29,21 @@ export default function CrearIncidencia() {
       />
 
       {!modalOpen && (
-        <button
-          onClick={() => setIsSelecting(s => !s)}
-          style={{ position: 'absolute', bottom: '2rem', right: '2rem', zIndex: 10 }}
-        >
-          {isSelecting ? '✕ Cancelar' : '+ Crear incidencia'}
-        </button>
+        <MapToolbar
+          isSelecting={isSelecting}
+          onToggle={() => setIsSelecting(s => !s)}
+        />
       )}
 
       {modalOpen && coordinates && (
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 20 }}>
-          <div>
-            <button onClick={() => setModalOpen(false)}>✕</button>
+        <div className={styles.overlay}>
+          <div className={styles.modal}>
+            <div className={styles.header}>
+              <span className={styles.title}>Crear Incidencia</span>
+              <button className={styles.closeBtn} onClick={() => setModalOpen(false)}>
+                <X size={16} />
+              </button>
+            </div>
             <IncidentForm
               initialCoordinates={coordinates}
               onSubmitSuccess={() => setModalOpen(false)}
