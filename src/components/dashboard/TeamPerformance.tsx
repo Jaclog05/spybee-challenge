@@ -1,3 +1,7 @@
+import SubSection from "./SubSection"
+import ListWithBars from './ListWithBars'
+import styles from './TeamPerformance.module.scss'
+
 type Props = {
   resolvedores: [string, { closed: number; totalDays: number }][]
   reportadores: [string, number][]
@@ -5,33 +9,34 @@ type Props = {
 }
 
 export default function TeamPerformance({ resolvedores, reportadores, cargaTrabajo }: Props) {
+  const resolvedoresAsTags: [string, number][] = resolvedores.map(
+    ([name, data]) => [
+      `${name} (=${data.closed > 0 ? Math.round(data.totalDays / data.closed) : 0}d)`,
+      data.closed
+    ]
+  )
   return (
-    <section aria-label="Desempeño del equipo">
-      <h3>Desempeño del equipo</h3>
-      <div>
-        <h4>Quien resuelve más</h4>
-        <ul>
-          {resolvedores.map(([name, data]) => (
-            <li key={name}>{name} — {data.closed} cerradas (promedio {Math.round(data.totalDays / data.closed)} días)</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h4>Quien reporta más</h4>
-        <ul>
-          {reportadores.map(([name, count]) => (
-            <li key={name}>{name} — {count} incidencias</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h4>Carga actual de trabajo</h4>
-        <ul>
-          {cargaTrabajo.map(([name, count]) => (
-            <li key={name}>{name} — {count} abiertas</li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    <div className={styles.tripleColumn}>
+      <SubSection
+        title="Quién resuelve más"
+        subtitle="Cerradas en el periodo + tiempo promedio"
+      >
+        <ListWithBars tags={resolvedoresAsTags} barColor="#22c55e"/>
+      </SubSection>
+ 
+      <SubSection
+        title="Quién reporta más"
+        subtitle="Creadores con más incidencias registradas"
+      >
+        <ListWithBars tags={reportadores} barColor="#FeC513"/>
+      </SubSection>
+ 
+      <SubSection
+        title="Carga actual de trabajo"
+        subtitle="Responsables con más incidencias abiertas"
+      >
+        <ListWithBars tags={cargaTrabajo} barColor="#3b82f6"/>
+      </SubSection>
+    </div>
   )
 }
