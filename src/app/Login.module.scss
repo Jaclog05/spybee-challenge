@@ -1,0 +1,99 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+$color-text-dark: #1f2937;
+$color-text-label: #374151;
+$color-input-border: #d1d5db;
+$color-input-border-focus: $color-accent;
+$color-input-bg: #ffffff;
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: $color-navbar-bg;
+  padding: 1.5rem;
+}
+
+.card {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  margin-bottom: 0.25rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $color-text-dark;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $color-text-label;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: $color-text-dark;
+  background: $color-input-bg;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-md;
+  outline: none;
+  transition: border-color $transition, box-shadow $transition;
+  font-family: inherit;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:focus {
+    border-color: $color-input-border-focus;
+    box-shadow: 0 0 0 3px rgba(254, 197, 19, 0.15);
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 0.625rem 1.5rem;
+  background: $color-accent;
+  color: #000;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: opacity $transition;
+  margin-top: 0.25rem;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
