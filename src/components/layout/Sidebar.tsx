@@ -5,8 +5,8 @@ import { MapPin, ChartPie } from 'lucide-react';
 import styles from './Sidebar.module.scss'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: <MapPin size={20}/> },
-  { href: '/crear-incidencia', label: 'Mapa', icon: <ChartPie size={20} /> },
+  { href: '/dashboard', label: 'Dashboard', icon: <ChartPie size={20}/> },
+  { href: '/crear-incidencia', label: 'Mapa', icon: <MapPin size={20} /> },
 ]
 
 export default function Sidebar() {
