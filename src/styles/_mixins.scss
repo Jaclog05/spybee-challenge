@@ -1,0 +1,35 @@
+@use 'variables' as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin icon-btn {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  border: none;
+  background: transparent;
+  color: $color-text-muted;
+  cursor: pointer;
+  transition: background $transition, color $transition;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: $color-accent;
+  }
+
+  &.active {
+    background: rgba(245, 158, 11, 0.15);
+    color: $color-accent;
+  }
+}
