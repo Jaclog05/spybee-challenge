@@ -1,7 +1,10 @@
 "use client"
 
+import { useState, useMemo } from 'react'
 import { useIncidentStore } from '@/store/useIncidentStore'
+import type { DateRange } from '@/components/dashboard/DateRangeSelect'
 import {
+  filterByRange,
   getSummary,
   buildChartData,
   getResolvedores,
@@ -22,18 +25,23 @@ import TeamPerformance from '@/components/dashboard/TeamPerformance';
 import SectionHeader from '@/components/dashboard/SectionHeader';
 import SubSection from '@/components/dashboard/SubSection';
 import MapView from '@/components/map/MapView';
+import DateRangeSelect from '@/components/dashboard/DateRangeSelect';
 
 import styles from './Dashboard.module.scss'
 
 export default function Dashboard() {
   const data = useIncidentStore(state => state.incidents)
-  const active = data.filter(i => !i.deleted)
-  const summary = getSummary(data);
+  const [range, setRange] = useState<DateRange>('30d')
+
+  const filtered = useMemo(() => filterByRange(data, range), [data, range])
+  const active = filtered.filter(i => !i.deleted)
+  const summary = getSummary(filtered);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <h1>Incidencias</h1>
+        <DateRangeSelect value={range} onChange={setRange} />
       </header>
 
       <section aria-label="Resumen General" className={styles.section}>
@@ -54,13 +62,13 @@ export default function Dashboard() {
           title="Tendencia: creadas vs cerradas"
           subtitle="Comparativa temporal con backlog acumulado"
         >
-          <TrendChart data={buildChartData(data)} />
+          <TrendChart data={buildChartData(filtered)} />
         </SubSection>
         <SubSection
           title="Criticas para hoy"
           subtitle="Alta prioridad o con fecha proxima"
         >
-          <IncidentsTable incidents={data} />
+          <IncidentsTable incidents={filtered} />
         </SubSection>
       </section>
 
@@ -71,7 +79,7 @@ export default function Dashboard() {
           subtitle="Zonas con mas incidencias dentro de la obra"
         >
           <div style={{ width: '100%', height: '400px' }}>
-            <MapView markers={buildMarkers(data)} zoom={17} showHeatmap/>
+            <MapView markers={buildMarkers(filtered)} zoom={17} showHeatmap/>
           </div>
         </SubSection>
       </section>
@@ -83,13 +91,13 @@ export default function Dashboard() {
             title="Por categoria de incidencia"
             subtitle=""
           >
-            <CategoryRadarChart data={getCategorias(data)} />
+            <CategoryRadarChart data={getCategorias(filtered)} />
           </SubSection>
           <SubSection
             title="Por etiqueta"
             subtitle=""
           >
-            <ListWithBars tags={getEtiquetas(data)} barColor='#22c55e'/>
+            <ListWithBars tags={getEtiquetas(filtered)} barColor='#22c55e'/>
           </SubSection>
         </div>
       </section>
@@ -97,9 +105,9 @@ export default function Dashboard() {
       <section aria-label="Desempeño del equipo" className={styles.section}>
         <SectionHeader title="Desempeño del equipo" subtitle="Quien resuelve, quién reporta, quién carga el trabajo" />
         <TeamPerformance
-          resolvedores={getResolvedores(data)}
-          reportadores={getReportadores(data)}
-          cargaTrabajo={getCargaTrabajo(data)}
+          resolvedores={getResolvedores(filtered)}
+          reportadores={getReportadores(filtered)}
+          cargaTrabajo={getCargaTrabajo(filtered)}
         />
       </section>
     </main>

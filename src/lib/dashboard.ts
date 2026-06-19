@@ -1,4 +1,17 @@
 import type { Incident } from '@/types/incident'
+import type { DateRange } from '@/components/dashboard/DateRangeSelect'
+
+export function filterByRange(incidents: Incident[], range: DateRange): Incident[] {
+  const now = Date.now()
+  const ms: Record<DateRange, number> = {
+    '7d': 7 * 86400000,
+    '15d': 15 * 86400000,
+    '30d': 30 * 86400000,
+    '90d': 90 * 86400000,
+    '6m': 180 * 86400000,
+  }
+  return incidents.filter(i => now - new Date(i.createdAt).getTime() <= ms[range])
+}
 
 export function getSummary(incidents: Incident[]) {
   const active = incidents.filter(i => !i.deleted)
