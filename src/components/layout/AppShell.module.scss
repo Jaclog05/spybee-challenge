@@ -16,3 +16,14 @@
   padding-top: 0;
   padding-left: 0;
 }
+
+@media (max-width: 480px) {
+  .shell {
+    grid-template-areas:
+      "navbar"
+      "sidebar"
+      "content";
+    grid-template-columns: 1fr;
+    grid-template-rows: $navbar-height auto 1fr;
+  }
+}

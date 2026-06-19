@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   padding: 0.5rem 0;
-  z-index: $z-sidebar;
+  z-index: 0;
 }
 
 .nav {
@@ -32,4 +32,21 @@
 .active {
   background: rgba(245, 158, 11, 0.15);
   color: $color-accent;
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0.375rem 0;
+    border-right: none;
+    border-bottom: 1px solid $color-border;
+  }
+
+  .nav {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+  }
 }
