@@ -84,3 +84,13 @@
     background: #f3f4f6;
   }
 }
+
+@media (max-width: 480px) {
+  .project {
+    display: none;
+  }
+
+  .avatarInfo {
+    display: none;
+  }
+}

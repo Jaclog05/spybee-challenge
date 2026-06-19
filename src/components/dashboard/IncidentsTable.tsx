@@ -22,121 +22,123 @@ export default function IncidentsTable({ incidents }: Props) {
 
   return (
     <div>
-    <table className={styles.table}>
-      <thead className={styles.thead}>
-        <tr>
-          <th className={styles.th}>ID</th>
-          <th className={styles.th}>Título</th>
-          <th className={styles.th}>Prioridad</th>
-          <th className={styles.th}>Estado</th>
-          <th className={styles.th}>Asignados</th>
-          <th className={styles.th}>Creado por</th>
-          <th className={styles.th}>Vencimiento</th>
-        </tr>
-      </thead>
-      <tbody>
-        {paginated.map(incident => {
-          const due = formatDueDate(incident.dueDate)
+    <div className={styles.tableWrapper}>
+      <table className={styles.table}>
+        <thead className={styles.thead}>
+          <tr>
+            <th className={styles.th}>ID</th>
+            <th className={styles.th}>Título</th>
+            <th className={styles.th}>Prioridad</th>
+            <th className={styles.th}>Estado</th>
+            <th className={styles.th}>Asignados</th>
+            <th className={styles.th}>Creado por</th>
+            <th className={styles.th}>Vencimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginated.map(incident => {
+            const due = formatDueDate(incident.dueDate)
 
-          return (
-            <tr key={incident.id} className={styles.tr}>
-              {/* ID */}
-              <td className={`${styles.td} ${styles.cellId}`}>
-                #{incident.sequenceId}
-              </td>
+            return (
+              <tr key={incident.id} className={styles.tr}>
+                {/* ID */}
+                <td className={`${styles.td} ${styles.cellId}`}>
+                  #{incident.sequenceId}
+                </td>
 
-              {/* Título */}
-              <td className={`${styles.td} ${styles.cellTitle}`}>
-                {incident.title}
-              </td>
+                {/* Título */}
+                <td className={`${styles.td} ${styles.cellTitle}`}>
+                  {incident.title}
+                </td>
 
-              {/* Prioridad */}
-              <td className={styles.td}>
-                <span className={`${styles.badge} ${priorityClass(incident.priority, styles)}`}>
-                  {incident.priority}
-                </span>
-              </td>
+                {/* Prioridad */}
+                <td className={styles.td}>
+                  <span className={`${styles.badge} ${priorityClass(incident.priority, styles)}`}>
+                    {incident.priority}
+                  </span>
+                </td>
 
-              {/* Estado */}
-              <td className={styles.td}>
-                <span className={`${styles.badge} ${statusClass(incident.status, styles)}`}>
-                  {incident.status}
-                </span>
-              </td>
+                {/* Estado */}
+                <td className={styles.td}>
+                  <span className={`${styles.badge} ${statusClass(incident.status, styles)}`}>
+                    {incident.status}
+                  </span>
+                </td>
 
-              {/* Asignados */}
-              <td className={styles.td}>
-                {incident.assignees.length > 0 ? (
-                  <div className={styles.avatarGroup}>
-                    {incident.assignees.slice(0, 4).map(a => (
-                      a.avatarUrl ? (
+                {/* Asignados */}
+                <td className={styles.td}>
+                  {incident.assignees.length > 0 ? (
+                    <div className={styles.avatarGroup}>
+                      {incident.assignees.slice(0, 4).map(a => (
+                        a.avatarUrl ? (
+                          <Image
+                            key={a.id}
+                            src={a.avatarUrl}
+                            alt={a.name}
+                            title={a.name}
+                            className={styles.avatar}
+                            width={32}
+                            height={32}
+                          />
+                        ) : (
+                          <span
+                            key={a.id}
+                            className={styles.avatarInitials}
+                            title={a.name}
+                          >
+                            {getInitials(a.name)}
+                          </span>
+                        )
+                      ))}
+                    </div>
+                  ) : (
+                    <span className={styles.noAssignee}>—</span>
+                  )}
+                </td>
+
+                {/* Creado por */}
+                <td className={styles.td}>
+                  {incident.owner ? (
+                    <div className={styles.avatarGroup}>
+                      {incident.owner.avatarUrl ? (
                         <Image
-                          key={a.id}
-                          src={a.avatarUrl}
-                          alt={a.name}
-                          title={a.name}
+                          src={incident.owner.avatarUrl}
+                          alt={incident.owner.name}
+                          title={incident.owner.name}
                           className={styles.avatar}
                           width={32}
                           height={32}
                         />
                       ) : (
                         <span
-                          key={a.id}
                           className={styles.avatarInitials}
-                          title={a.name}
+                          title={incident.owner.name}
                         >
-                          {getInitials(a.name)}
+                          {getInitials(incident.owner.name)}
                         </span>
-                      )
-                    ))}
-                  </div>
-                ) : (
-                  <span className={styles.noAssignee}>—</span>
-                )}
-              </td>
+                      )}
+                    </div>
+                  ) : (
+                    <span className={styles.noAssignee}>—</span>
+                  )}
+                </td>
 
-              {/* Creado por */}
-              <td className={styles.td}>
-                {incident.owner ? (
-                  <div className={styles.avatarGroup}>
-                    {incident.owner.avatarUrl ? (
-                      <Image
-                        src={incident.owner.avatarUrl}
-                        alt={incident.owner.name}
-                        title={incident.owner.name}
-                        className={styles.avatar}
-                        width={32}
-                        height={32}
-                      />
-                    ) : (
-                      <span
-                        className={styles.avatarInitials}
-                        title={incident.owner.name}
-                      >
-                        {getInitials(incident.owner.name)}
-                      </span>
-                    )}
-                  </div>
-                ) : (
-                  <span className={styles.noAssignee}>—</span>
-                )}
-              </td>
-
-              {/* Vencimiento */}
-              <td className={styles.td}>
-                {due ? (
-                  <span className={due.overdue ? styles.dueDateOverdue : styles.dueDateOk}>
-                    {due.label}
-                  </span>
-                ) : (
-                  <span className={styles.dueDateEmpty}>Sin fecha</span>
-                )}
-              </td>
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+                {/* Vencimiento */}
+                <td className={styles.td}>
+                  {due ? (
+                    <span className={due.overdue ? styles.dueDateOverdue : styles.dueDateOk}>
+                      {due.label}
+                    </span>
+                  ) : (
+                    <span className={styles.dueDateEmpty}>Sin fecha</span>
+                  )}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
       {/* Paginación */}
     <div className={styles.pagination}>
       <span className={styles.pageInfo}>

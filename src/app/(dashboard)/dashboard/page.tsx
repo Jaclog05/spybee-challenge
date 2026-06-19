@@ -86,7 +86,7 @@ export default function Dashboard() {
 
       <section aria-label="Distribución detallada" className={styles.section}>
         <SectionHeader title="Distribución detallada" subtitle="Por tipo de incidencia y tipo de obra" />
-        <div className={styles.doubleColumn}>
+        <div className={styles.wrapperDistribucion}>
           <SubSection
             title="Por categoria de incidencia"
             subtitle=""

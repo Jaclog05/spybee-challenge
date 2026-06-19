@@ -23,3 +23,24 @@
     background: #e5e7eb;
   }
 }
+
+@media (max-width: 600px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    h3 {
+      white-space: normal;
+      font-size: 0.875rem;
+    }
+
+    .subtitle {
+      white-space: normal;
+      font-size: 0.75rem;
+    }
+
+    .line {
+      display: none;
+    }
+  }
+}
