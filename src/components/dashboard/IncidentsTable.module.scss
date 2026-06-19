@@ -180,3 +180,68 @@
   color: #d1d5db;
   font-size: 1rem;
 }
+
+/* ── Paginación ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 12px 0 4px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.pageInfo {
+  margin-right: 8px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.pageBtn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.pageBtnActive {
+  background: #111827;
+  border-color: #111827;
+  color: #ffffff;
+  font-weight: 600;
+
+  &:hover {
+    background: #111827;
+  }
+}
+
+.pageDots {
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  user-select: none;
+}

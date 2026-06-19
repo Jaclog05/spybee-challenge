@@ -1,12 +1,27 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 import type { Incident } from '@/types/incident'
 import { priorityClass, statusClass, getInitials, formatDueDate } from '@/lib/dashboard-helpers'
 import styles from './IncidentsTable.module.scss'
 
+const PAGE_SIZE = 10
+
 type Props = { incidents: Incident[] }
 
 export default function IncidentsTable({ incidents }: Props) {
+  const [page, setPage] = useState(0)
+
+  const sorted = incidents
+    .slice()
+    .sort((a, b) => Number(b.sequenceId) - Number(a.sequenceId))
+
+  const totalPages = Math.ceil(sorted.length / PAGE_SIZE)
+  const paginated = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+
   return (
+    <div>
     <table className={styles.table}>
       <thead className={styles.thead}>
         <tr>
@@ -20,11 +35,7 @@ export default function IncidentsTable({ incidents }: Props) {
         </tr>
       </thead>
       <tbody>
-        {incidents
-          .slice()
-          .sort((a, b) => Number(b.sequenceId) - Number(a.sequenceId))
-          .slice(0, 10)
-          .map(incident => {
+        {paginated.map(incident => {
           const due = formatDueDate(incident.dueDate)
 
           return (
@@ -126,5 +137,61 @@ export default function IncidentsTable({ incidents }: Props) {
         })}
       </tbody>
     </table>
+      {/* Paginación */}
+    <div className={styles.pagination}>
+      <span className={styles.pageInfo}>
+        {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, sorted.length)} de {sorted.length}
+      </span>
+
+      {/* Anterior */}
+      <button
+        className={styles.pageBtn}
+        disabled={page === 0}
+        onClick={() => setPage(p => p - 1)}
+      >
+        ‹
+      </button>
+
+      {/* Números */}
+      {(() => {
+        const pages: (number | 'dots')[] = []
+
+        if (totalPages <= 7) {
+          for (let i = 0; i < totalPages; i++) pages.push(i)
+        } else {
+          pages.push(0)
+          if (page > 2) pages.push('dots')
+          for (let i = Math.max(1, page - 1); i <= Math.min(totalPages - 2, page + 1); i++) {
+            pages.push(i)
+          }
+          if (page < totalPages - 3) pages.push('dots')
+          pages.push(totalPages - 1)
+        }
+
+        return pages.map((p, i) =>
+          p === 'dots' ? (
+            <span key={`dots-${i}`} className={styles.pageDots}>···</span>
+          ) : (
+            <button
+              key={p}
+              className={`${styles.pageBtn} ${p === page ? styles.pageBtnActive : ''}`}
+              onClick={() => setPage(p)}
+            >
+              {p + 1}
+            </button>
+          )
+        )
+      })()}
+
+      {/* Siguiente */}
+      <button
+        className={styles.pageBtn}
+        disabled={page >= totalPages - 1}
+        onClick={() => setPage(p => p + 1)}
+      >
+        ›
+      </button>
+    </div>
+    </div>
   )
 }
