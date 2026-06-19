@@ -119,6 +119,16 @@ $color-input-bg: #ffffff;
   }
 }
 
+.credencialError {
+  font-size: 0.8125rem;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: $radius-md;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+}
+
 .submitBtn {
   width: 100%;
   padding: 0.625rem 1.5rem;

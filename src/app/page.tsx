@@ -2,22 +2,45 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
+import { useAuthStore } from '@/store/useAuthStore'
 import styles from './Login.module.scss'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function Login() {
+  const router = useRouter()
+  const login = useAuthStore(s => s.login)
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [emailError, setEmailError] = useState('')
+  const [credencialError, setCredencialError] = useState('')
 
   function handleEmailBlur() {
     if (email && !EMAIL_REGEX.test(email)) {
       setEmailError('Correo electrónico inválido')
     } else {
       setEmailError('')
+    }
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setCredencialError('')
+
+    if (!email || !password) {
+      setCredencialError('Todos los campos son obligatorios')
+      return
+    }
+
+    const ok = login(email, password)
+    if (ok) {
+      router.push('/dashboard')
+    } else {
+      setCredencialError('Credenciales inválidas')
     }
   }
 
@@ -33,7 +56,7 @@ export default function Login() {
           className={styles.logo}
         />
         <h1 className={styles.title}>Iniciar sesión</h1>
-        <form className={styles.form} noValidate>
+        <form className={styles.form} noValidate onSubmit={handleSubmit}>
           <div className={styles.field}>
             <label htmlFor="email" className={styles.label}>Correo electrónico</label>
             <input
@@ -42,7 +65,7 @@ export default function Login() {
               type="email"
               placeholder="ejemplo@spybee.com"
               value={email}
-              onChange={e => { setEmail(e.target.value); setEmailError('') }}
+              onChange={e => { setEmail(e.target.value); setCredencialError(''); setEmailError('') }}
               onBlur={handleEmailBlur}
               className={`${styles.input} ${emailError ? styles.inputError : ''}`}
             />
@@ -57,7 +80,7 @@ export default function Login() {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => { setPassword(e.target.value); setCredencialError('') }}
                 className={styles.input}
               />
               <button
@@ -70,6 +93,7 @@ export default function Login() {
               </button>
             </div>
           </div>
+          {credencialError && <span className={styles.credencialError}>{credencialError}</span>}
           <button type="submit" className={styles.submitBtn}>
             Ingresar
           </button>

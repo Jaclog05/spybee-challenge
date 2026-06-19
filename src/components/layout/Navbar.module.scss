@@ -18,17 +18,69 @@
 }
 
 .avatar {
-  width: $sidebar-width;
-  @include flex-center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
 .avatarCircle {
   @include flex-center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: $color-accent;
   color: #000;
   font-weight: 700;
   font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.avatarInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.avatarName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.avatarRole {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: $color-sidebar-bg;
+  border-radius: $radius-md;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: $z-modal;
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  color: #1f2937;
+  cursor: pointer;
+  text-align: left;
+  transition: background $transition;
+
+  &:hover {
+    background: #f3f4f6;
+  }
 }
