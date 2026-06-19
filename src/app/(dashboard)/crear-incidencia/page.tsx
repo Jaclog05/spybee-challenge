@@ -2,7 +2,7 @@
 import dynamic from 'next/dynamic'
 import IncidentForm from '@/components/crear-incidencia/IncidentForm'
 import MapToolbar from '@/components/map/MapToolbar'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { X } from 'lucide-react'
 import styles from './CrearIncidencia.module.scss'
 
@@ -12,6 +12,7 @@ export default function CrearIncidencia() {
   const [isSelecting, setIsSelecting] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<{ lat: number, lng: number } | null>(null)
+  const [markers, setMarkers] = useState<Array<{ lat: number; lng: number }>>([])
 
   function handleLocationSelect(lat: number, lng: number) {
     if(!isSelecting) return
@@ -20,12 +21,20 @@ export default function CrearIncidencia() {
     setModalOpen(true)
   }
 
+  const handleSuccess = useCallback(() => {
+    if (coordinates) {
+      setMarkers(prev => [...prev, { lat: coordinates.lat, lng: coordinates.lng }])
+    }
+    setModalOpen(false)
+  }, [coordinates])
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
 
       <MapView
         onLocationSelect={handleLocationSelect}
         isSelecting={isSelecting}
+        markers={markers}
       />
 
       {!modalOpen && (
@@ -46,7 +55,7 @@ export default function CrearIncidencia() {
             </div>
             <IncidentForm
               initialCoordinates={coordinates}
-              onSubmitSuccess={() => setModalOpen(false)}
+              onSubmitSuccess={handleSuccess}
             />
           </div>
         </div>
