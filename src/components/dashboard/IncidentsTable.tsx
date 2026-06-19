@@ -20,7 +20,11 @@ export default function IncidentsTable({ incidents }: Props) {
         </tr>
       </thead>
       <tbody>
-        {incidents.slice(0, 10).map(incident => {
+        {incidents
+          .slice()
+          .sort((a, b) => Number(b.sequenceId) - Number(a.sequenceId))
+          .slice(0, 10)
+          .map(incident => {
           const due = formatDueDate(incident.dueDate)
 
           return (

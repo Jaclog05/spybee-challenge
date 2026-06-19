@@ -32,7 +32,7 @@ export const useIncidentStore = create<IncidentStore>()((set) => ({
         updatedAt: new Date().toISOString(),
         closingDate: null,
       }
-      return {incidents: [newIncident, ...state.incidents] }
+      return {incidents: [...state.incidents, newIncident] }
     })
   },
 
