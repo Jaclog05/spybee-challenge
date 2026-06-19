@@ -9,6 +9,7 @@ import {
   getCargaTrabajo,
   getCategorias,
   getEtiquetas,
+  buildMarkers,
 } from '@/lib/dashboard'
 
 import SummaryCards from '@/components/dashboard/SummaryCards';
@@ -20,6 +21,7 @@ import ListWithBars from '@/components/dashboard/ListWithBars';
 import TeamPerformance from '@/components/dashboard/TeamPerformance';
 import SectionHeader from '@/components/dashboard/SectionHeader';
 import SubSection from '@/components/dashboard/SubSection';
+import MapView from '@/components/map/MapView';
 
 import styles from './Dashboard.module.scss'
 
@@ -62,7 +64,18 @@ export default function Dashboard() {
         </SubSection>
       </section>
 
-      <section aria-label="Mapa de Incidencias"></section>
+      <section aria-label="Mapa de Incidencias">
+        <SectionHeader title="Mapa de Incidencias" subtitle="Distribución Geográfica" />
+        <SubSection
+          title="Mapa de calor geográfico"
+          subtitle="Zonas con mas incidencias dentro de la obra"
+        >
+          <div style={{ width: '100%', height: '400px' }}>
+            <MapView markers={buildMarkers(data)} zoom={17} showHeatmap/>
+          </div>
+        </SubSection>
+      </section>
+
       <section aria-label="Distribución detallada" className={styles.section}>
         <SectionHeader title="Distribución detallada" subtitle="Por tipo de incidencia y tipo de obra" />
         <div className={styles.doubleColumn}>

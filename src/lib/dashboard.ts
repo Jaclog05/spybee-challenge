@@ -28,6 +28,17 @@ function formatLabel(isoWeekStart: string) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 }
 
+export function buildMarkers(incidents: Incident[]) {
+  return incidents.filter(i => i.coordinates?.lat && i.coordinates?.lng)
+    .map(i => ({
+      lat: i.coordinates!.lat,
+      lng: i.coordinates!.lng,
+      id: i.id,
+      label: i.title
+    })
+  )
+}
+
 export function buildChartData(incidents: Incident[]) {
   const creadasMap = new Map<string, number>()
   const cerradasMap = new Map<string, number>()
