@@ -76,7 +76,7 @@ src/
 
 ```bash
 # 1. Clonar el repositorio
-git clone <url-del-repo>
+git clone https://github.com/Jaclog05/spybee-challenge.git
 cd spybee-challenge
 
 # 2. Instalar dependencias
@@ -130,47 +130,3 @@ npm run lint
 | Password | 123456                  |
 
 La autenticación es completamente client-side (Zustand), sin backend.
-
-## Decisiones de arquitectura
-
-### State management con Zustand
-
-Se usan dos stores independientes:
-
-- **`useAuthStore`**: maneja sesión simulada con credenciales hardcodeadas. Expone `login`, `logout` y el objeto `user` (`email`, `userName`, `role`).
-- **`useIncidentStore`**: almacena las 65 incidencias de prueba y permite agregar nuevas. Los datos mock se cargan desde un JSON al inicializar el store.
-
-### Estructura de componentes feature-first
-
-Los componentes se agrupan por funcionalidad (`dashboard/`, `map/`, `crear-incidencia/`, `layout/`), no por tipo técnico. Cada componente tiene su archivo `.tsx` y su `.module.scss` co-localizados.
-
-### Route group para proteger rutas
-
-Las rutas `/dashboard` y `/crear-incidencia` están dentro de un route group `(dashboard)` con su propio layout que verifica autenticación. Si no hay usuario en el store, redirige a `/`. El layout raíz es minimalista para que la página de login no herede la shell.
-
-### Helpers de dashboard separados de la UI
-
-La lógica de agregación de datos (`getSummary`, `buildChartData`, etc.) vive en `lib/dashboard.ts`, separada de los componentes de presentación. Los helpers de UI (formateo de fechas, asignación de clases CSS) están en `lib/dashboard-helpers.ts`.
-
-### Mapbox GL con markers dinámicos
-
-El mapa se inicializa en Bogotá con el estilo `streets-v12`. Los markers se crean con el `TriangleAlert` de Lucide renderizado mediante `createRoot` de React 19. Al crear una incidencia, el marker persiste porque los datos se obtienen del store de Zustand.
-
-### Mock data
-
-El archivo `src/data/incidents.mock.json` contiene 65 incidencias de construcción con metadatos completos: coordenadas geográficas, fechas, prioridades, estados, etiquetas, asignados y archivos multimedia.
-
-### Responsive design
-
-El dashboard se adapta con múltiples breakpoints: el AppShell cambia a una columna única en `< 480px`, el Sidebar se vuelve horizontal debajo del Navbar, las tarjetas de resumen se reordenan, y los títulos de secciones se envuelven en pantallas pequeñas.
-
-### Paleta de colores
-
-Los tokens de diseño están centralizados en `src/styles/_variables.scss`:
-
-| Token               | Valor      | Uso                         |
-| ------------------- | ---------- | --------------------------- |
-| `$color-accent`     | `#FEC513`  | Acento amarillo, botones    |
-| `$color-navbar-bg`  | `#3D3D3D`  | Fondo del navbar y login    |
-| `$color-bg`         | `#f4f5f7`  | Fondo general del dashboard |
-| `$color-surface`    | `#FFFFFF`  | Tarjetas, modales           |
